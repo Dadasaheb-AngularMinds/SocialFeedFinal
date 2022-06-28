@@ -2,6 +2,8 @@ const httpStatus = require('http-status');
 const pick = require('../utils/pick');
 const ApiError = require('../utils/ApiError');
 const catchAsync = require('../utils/catchAsync');
+const User = require("../models/user.model")
+const bcryptThePassword = require("bcryptjs");
 const {
   userService
 } = require('../services');
@@ -29,7 +31,6 @@ const getUsers = catchAsync(async (req, res) => {
 
 
 const getUser = catchAsync(async (req, res) => {
-
   const user = await (await userService.getUserById(req.params.userId))
     .populate({ path: "bookmark.feedId", select: "_id caption photos" });
   if (!user) {
@@ -49,8 +50,49 @@ const updateOrg = catchAsync(async (req, res) => {
 });
 
 const updateProfilePicture = catchAsync(async (req, res) => {
-  const org = await userService.updateProfilePictueById(req.params.userId, { profilePicture: req.file.filename });
+  const org = await userService.updateProfilePictueById(req.params.userId, { profilePicture: req.file.path });
+  console.log()
   res.send(org);
+});
+
+
+const changePassword = catchAsync(async (req, res) => {
+  const { _id } = req.user;
+  const userDetails = await User.findOne({ _id });
+  const { oldPassword, newPassword, confirmPassword } = req.body;
+  if (newPassword === confirmPassword) {
+    if (await bcryptThePassword.compare(oldPassword, userDetails.password)) {
+      if (!newPassword.match(/\d/) || !newPassword.match(/[a-zA-Z]/)) {
+        throw new Error(
+          "Password must contain at least one letter and one number"
+        );
+      }
+      try {
+        const salt = await bcryptThePassword.genSalt(8);
+        const passwordHashed = bcryptThePassword.hashSync(newPassword, salt);
+
+        await User.findByIdAndUpdate(_id, {
+          password: passwordHashed,
+        });
+        return res.status(200).json({
+          message: "Successfully Updated",
+        });
+      } catch (e) {
+        return res.status(500).json({
+          error: {
+            message: e.message,
+          },
+        });
+      }
+    }
+    return res.status(400).json({
+      message: "Password Doesn't Match with Old Password",
+    });
+  } else {
+    return res.status(400).json({
+      message: "newPassword and confirmPassword Doesn't Matched",
+    });
+  }
 });
 
 
@@ -64,6 +106,7 @@ module.exports = {
   getUsers,
   getUser,
   updateUser,
+  changePassword,
   updateProfilePicture,
   deleteUser,
   updateOrg,

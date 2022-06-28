@@ -17,7 +17,7 @@ const feedSchema = mongoose.Schema(
         like: [{
             likedBy:
             {
-                type: mongoose.Types.ObjectId,
+                type: Object,
                 ref: "User"
             }
         }],

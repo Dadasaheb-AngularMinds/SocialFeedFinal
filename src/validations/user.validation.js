@@ -52,6 +52,13 @@ const updateProfilePicture = {
     })
 };
 
+const changePassword = {
+  body: Joi.object().keys({
+    oldPassword: Joi.string().required(),
+    newPassword: Joi.string().required().custom(password),
+    confirmPassword: Joi.string().required()
+  })
+};
 
 const deleteUser = {
   params: Joi.object().keys({
@@ -64,6 +71,7 @@ module.exports = {
   getUsers,
   getUser,
   updateUser,
+  changePassword,
   updateProfilePicture,
   deleteUser,
 };

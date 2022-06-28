@@ -2,6 +2,7 @@ const express = require('express');
 const authRoute = require('./auth.route');
 const userRoute = require('./user.route');
 const feedRoute = require('./feeds.route');
+const savedRoute = require('./bookmark.route');
 
 const docsRoute = require('./docs.route');
 const config = require('../config/config');
@@ -15,6 +16,10 @@ const defaultRoutes = [{
 }, {
   path: '/users',   // base path for user routes
   route: userRoute,
+},
+{
+  path: '/savedPosts',
+  route: savedRoute
 },
 {
   path: '/feeds',   // base path for feed routes

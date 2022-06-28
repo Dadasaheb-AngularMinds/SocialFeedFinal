@@ -18,6 +18,9 @@ router
 // Routes: get one user, update user, delete user
 
 router
+  .patch('/changePassword', validate(userValidation.changePassword), userController.changePassword);
+
+router
   .route('/:userId')
   .get(validate(userValidation.getUser), userController.getUser)
   .patch(validate(userValidation.updateUser), userController.updateUser)
@@ -26,7 +29,12 @@ router
 // Routes: update company
 router
   .route('/profilePicture/:userId')
-  .patch(uploadProfilePic.singleImg,validate(userValidation.updateProfilePicture), userController.updateProfilePicture);
+  .patch(uploadProfilePic.singleImg, validate(userValidation.updateProfilePicture), userController.updateProfilePicture);
+
+
+//change - password
+
+
 
 module.exports = router;
 

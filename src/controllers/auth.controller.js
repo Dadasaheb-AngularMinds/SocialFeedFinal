@@ -32,9 +32,6 @@ const register = catchAsync(async (req, res) => {
   });
 });
 
-
-
-
 const login = catchAsync(async (req, res) => {
   const {
     email,
@@ -55,13 +52,14 @@ const login = catchAsync(async (req, res) => {
 const forgotPassword = catchAsync(async (req, res) => {
   const resetPasswordToken = await tokenService.generateResetPasswordToken(req.body.email);
   await emailService.sendResetPasswordEmail(req.body.email, resetPasswordToken);
-  res.status(httpStatus.NO_CONTENT).send();
+  res.status(200).json({ token: resetPasswordToken });
 });
 
 const resetPassword = catchAsync(async (req, res) => {
   await authService.resetPassword(req.query.token, req.body.password);
   res.status(httpStatus.NO_CONTENT).send();
 });
+
 
 const sendVerificationEmail = catchAsync(async (req, res) => {
   const verifyEmailToken = await tokenService.generateVerifyEmailToken(req.user);

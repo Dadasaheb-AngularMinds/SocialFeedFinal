@@ -21,8 +21,14 @@ if (config.env !== 'test') {
 }
 
 // Set necessary HTTP headers for app security
-app.use(helmet());
-
+app.use(
+  helmet.contentSecurityPolicy({
+    useDefaults: true,
+    directives: {
+      "img-src": ["'self'", "https: data:"],
+    },
+  })
+);
 // JSON requests are received as plain text. We need to parse the json request body.
 app.use(express.json());
 

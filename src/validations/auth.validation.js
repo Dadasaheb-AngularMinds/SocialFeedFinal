@@ -8,9 +8,9 @@ const register = {
     firstName: Joi.string().required(),
     lastName: Joi.string().required(),
     profilePicture: ''
-
   }),
 };
+
 const updateProfile = {
   body: Joi.object().keys({
     email: Joi.string().required().email(),

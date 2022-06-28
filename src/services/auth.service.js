@@ -18,7 +18,6 @@ const loginUserWithEmailAndPassword = async (email, password) => {
   }
   return await user.populate("_org", "name email");
   // return await user.populate("name email");
-
 };
 
 /**
@@ -40,6 +39,10 @@ const resetPassword = async (resetPasswordToken, newPassword) => {
     throw new ApiError(httpStatus.UNAUTHORIZED, 'Password reset failed');
   }
 };
+
+
+
+
 
 /**
  * Verify email
